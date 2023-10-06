@@ -1,6 +1,8 @@
+// ignore_for_file: use_build_context_synchronously
+
+import 'package:demo_social_media/Utils/common_functions.dart';
 import 'package:demo_social_media/Utils/common_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import '../../Utils/constants.dart';
@@ -17,16 +19,10 @@ class LoginScreen extends StatefulWidget {
 class LoginScreenState extends State<LoginScreen> {
   final _formKey = GlobalKey<FormState>();
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  String? _id;
-  String? _password;
+  // String? _id;
+  // String? _password;
   bool passVisibility = false;
-
-  Future<FirebaseApp> _initializeFirebase() async {
-    FirebaseApp firebaseApp = await Firebase.initializeApp();
-    return firebaseApp;
-  }
-
-
+  final List<TextEditingController> _textEditingControllers = [TextEditingController(),TextEditingController()];
 
   @override
   Widget build(BuildContext context) {
@@ -51,6 +47,7 @@ class LoginScreenState extends State<LoginScreen> {
                       borderSide: BorderSide(color: Colors.blue),
                     ),
                   ),
+                  controller: _textEditingControllers[0],
                   validator: (value) {
                     if (!emailRegex.hasMatch(value??"")) {
                       return 'Please enter a valid email address';
@@ -58,7 +55,7 @@ class LoginScreenState extends State<LoginScreen> {
                     return null;
                   },
                   onSaved: (value) {
-                    _id = value;
+                    //_id = value;
                   },
                 ),
                 const SizedBox(height: 20),
@@ -78,6 +75,7 @@ class LoginScreenState extends State<LoginScreen> {
                       icon: Icon(passVisibility ? Icons.visibility : Icons.visibility_off),
                     )
                   ),
+                  controller: _textEditingControllers[1],
                   obscureText: passVisibility,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -86,7 +84,7 @@ class LoginScreenState extends State<LoginScreen> {
                     return null;
                   },
                   onSaved: (value) {
-                    _password = value;
+                   // _password = value;
                   },
                 ),
                 const SizedBox(height: 20),
@@ -107,12 +105,19 @@ class LoginScreenState extends State<LoginScreen> {
 
                           if (_formKey.currentState!.validate()) {
                             _formKey.currentState!.save();
-                            FirebaseAuth.instance.signInWithEmailAndPassword(email: _id??"", password: _password??"").then((value){
+                            _auth.signInWithEmailAndPassword(email: _textEditingControllers[0].text, password: _textEditingControllers[1].text).then((value){
                               Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => const HomeScreen()));
-                            }).onError((error, stackTrace){
+                            }).onError((error, stackTrace) async{
+                              if(await CommonFunctions.isInternetAvailable()){
+                                CommonWidgets.customSnackBar(context,message: 'Invalid Credentials') ;
+                              }
+                              else{
+                                CommonWidgets.customSnackBar(context,message: 'Internet not available !!') ;
+                              }
+
                               debugPrint("Login Error : ${error.toString()}");
                             });
 
@@ -127,10 +132,11 @@ class LoginScreenState extends State<LoginScreen> {
                 const SizedBox(height: 20),
                 TextButton(
                   onPressed: () {
-                    FirebaseAuth.instance.sendPasswordResetEmail(email: "saransh2k3@gmail.com").onError((error, stackTrace){
-                      debugPrint("${_id.toString()} Forgot Password Error : ${error.toString()}");
+                    _auth.sendPasswordResetEmail(email: _textEditingControllers[0].text).then((value){
+                      CommonWidgets.customSnackBar(context,message: 'Reset link mailed to ${_textEditingControllers[0].text}') ;
+                    }).onError((error, stackTrace){
+                      debugPrint("${_textEditingControllers[0].text} Forgot Password Error : ${error.toString()}");
                     });
-                    // TODO: Implement forgot password logic
                   },
                   child: const Text('Forgot Password?'),
                 ),

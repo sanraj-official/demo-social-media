@@ -14,4 +14,12 @@ class CommonWidgets{
       child:   Text( text,style: TextStyle(color: textColor),),
     );
   }
+
+  static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> customSnackBar(BuildContext context,{String message = ""})
+  {
+    return ScaffoldMessenger.of(context).showSnackBar(
+       SnackBar(content: Text(message)),
+    );
+  }
+
 }
