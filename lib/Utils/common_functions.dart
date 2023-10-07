@@ -1,4 +1,5 @@
 import 'package:connectivity/connectivity.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class CommonFunctions {
@@ -13,4 +14,8 @@ class CommonFunctions {
     return false;
   }
 }
+  static bool isUserLoggedIn() {
+    User? user = FirebaseAuth.instance.currentUser;
+    return user != null;
+  }
 }

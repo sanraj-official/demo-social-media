@@ -1,3 +1,5 @@
+import 'package:demo_social_media/Utils/common_functions.dart';
+import 'package:demo_social_media/screens/home_screen/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -44,7 +46,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: LoginScreen(),
+      home: CommonFunctions.isUserLoggedIn()?const HomeScreen():const LoginScreen(),
       //const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
