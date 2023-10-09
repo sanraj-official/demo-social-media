@@ -1,9 +1,6 @@
 import 'package:demo_social_media/Utils/common_elements.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
 import '../../Utils/custom_decoration.dart';
-import '../login_screen/login_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -13,12 +10,19 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  String imageLink = 'https://source.unsplash.com/800x450/?number';
+  final String imageHtmlContent = "<img src='https://source.unsplash.com/800x450/?invitation_card,wedding'>";
+  final String textHtmlContent = "<h1>Hello, Flutter!</h1><p>This is an image: </p>";
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
         appBar: CommonElements.customAppBar(
           title: 'Demo Media',
+          actions: [
+            CommonElements().popUpMenu([],context)
+          ]
         ),
         body: body(),
       ),
@@ -32,18 +36,10 @@ class _HomeScreenState extends State<HomeScreen> {
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       alignment: Alignment.center,
-      child: CommonElements.commonButton(
-        text: "Logout",
-        onPressAction: (){
-          FirebaseAuth.instance.signOut().then((value){
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => const LoginScreen()));
-          }).onError((error, stackTrace){
-            debugPrint("Logout error : ${error.toString()}");
-          });
-
+      child: ListView.builder(
+        itemCount: 40,
+        itemBuilder :  (BuildContext context, int index) {
+          return CommonElements().postCard(htmlElement: "$textHtmlContent  <b>This is post number : $index</b>",imageLink: "$imageLink,$index");
         }
       ),
     );

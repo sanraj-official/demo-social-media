@@ -1,4 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+
+import '../screens/login_screen/login_screen.dart';
+import 'constants.dart';
 
 class CommonElements{
   CommonElements();
@@ -82,4 +87,70 @@ class CommonElements{
     );
   }
 
+  Widget popUpMenu( List<PopupMenuEntry<PopUpOptions>> items,BuildContext context,{Color color = Colors.white60}) {
+    items.add(
+      const PopupMenuItem<PopUpOptions>(
+        value: PopUpOptions.logOut,
+        child: Text("Logout"), //deleteButton(state),
+      ),
+    );
+    return PopupMenuButton<PopUpOptions>(
+      color: color,
+        onSelected: (PopUpOptions item) {
+
+            if(item == PopUpOptions.logOut)
+            {
+              FirebaseAuth.instance.signOut().then((value){
+                Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const LoginScreen()));
+              }).onError((error, stackTrace){
+                debugPrint("Logout error : ${error.toString()}");
+              });
+            }
+
+        },
+        itemBuilder: (BuildContext ctx) => items
+    );
+  }
+
+  Widget postCard({String imageLink='',String htmlElement=''}){
+    return Card(
+      shape:  RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(15.0),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15.0),
+        child: Column(
+          children: [
+            Visibility(
+              visible: imageLink.isNotEmpty,
+              child: FadeInImage(
+                imageErrorBuilder: (context, error, stackTrace) {
+                  // Handle network image loading error here
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Image.asset('lib/assets/404_banner.png'),
+                  );
+                },
+                placeholderFit: BoxFit.fitHeight,
+                fit: BoxFit.fill,
+                fadeInDuration:const Duration(seconds: 1),
+                image: NetworkImage(imageLink),
+                placeholder:const AssetImage('lib/assets/loading2.gif'),
+              ),
+            ),
+            Visibility(
+              visible: htmlElement.isNotEmpty,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: HtmlWidget(htmlElement),
+                )
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
