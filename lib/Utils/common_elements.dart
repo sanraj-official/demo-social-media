@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 import '../screens/login_screen/login_screen.dart';
 import 'constants.dart';
@@ -115,42 +114,42 @@ class CommonElements{
     );
   }
 
-  Widget postCard({String imageLink='',String htmlElement=''}){
-    return Card(
-      shape:  RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15.0),
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(15.0),
-        child: Column(
-          children: [
-            Visibility(
-              visible: imageLink.isNotEmpty,
-              child: FadeInImage(
-                imageErrorBuilder: (context, error, stackTrace) {
-                  // Handle network image loading error here
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Image.asset('lib/assets/404_banner.png'),
-                  );
-                },
-                placeholderFit: BoxFit.fitHeight,
-                fit: BoxFit.fill,
-                fadeInDuration:const Duration(seconds: 1),
-                image: NetworkImage(imageLink),
-                placeholder:const AssetImage('lib/assets/loading2.gif'),
-              ),
-            ),
-            Visibility(
-              visible: htmlElement.isNotEmpty,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: HtmlWidget(htmlElement),
-                )
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // Widget postCard({String imageLink='',String htmlElement=''}){
+  //   return Card(
+  //     shape:  RoundedRectangleBorder(
+  //       borderRadius: BorderRadius.circular(15.0),
+  //     ),
+  //     child: ClipRRect(
+  //       borderRadius: BorderRadius.circular(15.0),
+  //       child: Column(
+  //         children: [
+  //           Visibility(
+  //             visible: imageLink.isNotEmpty,
+  //             child: FadeInImage(
+  //               imageErrorBuilder: (context, error, stackTrace) {
+  //                 // Handle network image loading error here
+  //                 return Padding(
+  //                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
+  //                   child: Image.asset('lib/assets/404_banner.png'),
+  //                 );
+  //               },
+  //               placeholderFit: BoxFit.fitHeight,
+  //               fit: BoxFit.fill,
+  //               fadeInDuration:const Duration(seconds: 1),
+  //               image: NetworkImage(imageLink),
+  //               placeholder:const AssetImage('lib/assets/loading2.gif'),
+  //             ),
+  //           ),
+  //           Visibility(
+  //             visible: htmlElement.isNotEmpty,
+  //               child: Padding(
+  //                 padding: const EdgeInsets.all(8.0),
+  //                 child: HtmlWidget(htmlElement),
+  //               )
+  //           ),
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 }

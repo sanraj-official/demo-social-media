@@ -2,7 +2,9 @@ import 'package:demo_social_media/Utils/common_functions.dart';
 import 'package:demo_social_media/screens/home_screen/home_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'screens/home_screen/Bloc/home_screen_cubit.dart';
 import 'screens/login_screen/login_screen.dart';
 
 void main() async{
@@ -46,7 +48,14 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: CommonFunctions.isUserLoggedIn()?const HomeScreen():const LoginScreen(),
+      home: CommonFunctions.isUserLoggedIn()?MultiBlocProvider(
+        providers: [
+          BlocProvider<HomeScreenCubit>(
+            create: (_) => HomeScreenCubit(),
+          ),
+        ],
+        child:const HomeScreen(),
+      ) :const LoginScreen(),
       //const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }

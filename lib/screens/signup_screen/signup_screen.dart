@@ -4,10 +4,12 @@ import 'package:demo_social_media/Utils/common_elements.dart';
 import 'package:demo_social_media/screens/home_screen/home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../Utils/common_functions.dart';
 import '../../Utils/constants.dart';
 import '../../Utils/custom_decoration.dart';
+import '../home_screen/Bloc/home_screen_cubit.dart';
 import '../login_screen/login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -119,9 +121,15 @@ class SignupScreenState extends State<SignupScreen> {
                           _formKey.currentState!.save();
                           FirebaseAuth.instance.createUserWithEmailAndPassword(email: _textEditingControllers[1].text, password: _textEditingControllers[2].text).then((value){
                             Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const HomeScreen()));
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MultiBlocProvider(providers: [
+                                  BlocProvider<HomeScreenCubit>(
+                                    create: (_) => HomeScreenCubit(),
+                                  ),
+                                ], child: const HomeScreen()),
+                              ),
+                            );
                           }).onError((error, stackTrace) async{
                             if(await CommonFunctions.isInternetAvailable()){
                             CommonElements.customSnackBar(context,message: 'Something went wrong') ;
