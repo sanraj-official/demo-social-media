@@ -1,2 +1,2 @@
 # demo-social-media
-just for learning and future reference 
+just for learning and future reference (incomplete)
